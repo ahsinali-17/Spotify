@@ -12,13 +12,18 @@ function secToMinSec(sec) {
   return `${updatedMin}:${updatedSec}`;
 }
 
-// Function to fetch nasheeds from the server
 async function getNasheeds(folder) {
   currFolder = folder;
+  console.log(`Fetching nasheeds for folder: ${folder}`); // Debugging statement
   try {
-    const response = await fetch(`/getNasheeds?folder=${folder}`);
+    const response = await fetch(`/getNasheeds/${folder}`);
+    if (!response.ok) {
+      throw new Error(`Error fetching nasheeds: ${response.statusText}`);
+    }
     const data = await response.json();
     Nasheeds = data.nasheeds;
+    console.log(`Fetched nasheeds: ${Nasheeds}`); // Debugging statement
+
     const songUl = document.querySelector(".songlist ul");
     songUl.innerHTML = "";
     Nasheeds.forEach(fileName => {
@@ -34,6 +39,7 @@ async function getNasheeds(folder) {
           </div>
         </li>`;
     });
+
     document.querySelectorAll(".songlist li").forEach((e, index) => {
       e.addEventListener("click", () => {
         playMusic(Nasheeds[index]);
@@ -45,7 +51,7 @@ async function getNasheeds(folder) {
     return [];
   }
 }
-
+/*
 async function displayAlbums() {
   try {
     const response = await fetch(`/getAlbums`);
@@ -92,7 +98,7 @@ async function displayAlbums() {
 
 // Function to play a nasheed
 const playMusic = (track, pause = false) => {
-  const audioSrc = `/playNasheed?folder=${currFolder}&track=${track}`;
+  const audioSrc = `/img/Nasheeds/${currFolder}/${track}`;
   console.log(`Attempting to play track: ${audioSrc}`); // Debugging statement
   current.src = audioSrc; // Set the source of the audio element
   current.load(); // Load the audio element
@@ -128,61 +134,11 @@ const playMusic = (track, pause = false) => {
     console.error('.songtime element not found'); // Debugging statement
   }
 };
-
-// Function to display albums and handle click events
-// Function to display albums and handle click events
-// Function to display albums and handle click events
-async function displayAlbums() {
-  try {
-    const response = await fetch(`/getAlbums`); // Fetch albums from the server
-    const data = await response.json();
-    const cardContainer = document.querySelector('.cardContainer');
-    cardContainer.innerHTML = ""; // Clear existing album cards
-    // Populate the album cards
-    data.albums.forEach(album => {
-      cardContainer.innerHTML += `
-        <div data-folder="${album.folder}" class="card rounded">
-          <div class="play">
-            <svg width="16px" height="16px" viewBox="-0.5 0 8 8" version="1.1" xmlns="http://www.w3.org/2000/svg"
-              xmlns:xlink="http://www.w3.org/1999/xlink">
-              <title>play [#1001]</title>
-              <desc>Created with Sketch.</desc>
-              <defs></defs>
-              <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-                <g id="Dribbble-Light-Preview" transform="translate(-427.000000, -3765.000000)" fill="#000000">
-                  <g id="icons" transform="translate(56.000000, 160.000000)">
-                    <polygon id="play-[#1001]" points="371 3605 371 3613 378 3609"></polygon>
-                  </g>
-                </g>
-              </g>
-            </svg>
-          </div>
-          <img class="rounded" src="${album.cover}" alt="">
-          <div class="text">
-            <h2>${album.title}</h2>
-            <p>${album.description}</p>
-          </div>
-        </div>`;
-    });
-    // Add click event listener to each album card
-    document.querySelectorAll('.card').forEach(card => {
-      card.addEventListener('click', async () => {
-        Nasheeds = await getNasheeds(card.dataset.folder); // Fetch nasheeds for the selected album
-        if (Nasheeds.length > 0) { // Ensure there are nasheeds to play
-          playMusic(Nasheeds[0]); // Play the first nasheed from the album
-        }
-      });
-    });
-  } catch (error) {
-    console.error('Error fetching albums:', error);
-  }
-}
-
-// Main function to initialize the application
+*/
 // Main function to initialize the application
 async function main() {
-  Nasheeds = await getNasheeds("/img/Nasheeds/Aqib-Farid"); // Fetch nasheeds for the default folder
-  if (Nasheeds.length > 0) { // Ensure there are nasheeds to play
+  Nasheeds = await getNasheeds("Aqib-Farid"); // Fetch nasheeds for the default folder
+/*  if (Nasheeds.length > 0) { // Ensure there are nasheeds to play
     playMusic(Nasheeds[0], true); // Play the first nasheed
   }
   displayAlbums(); // Display albums
@@ -256,7 +212,7 @@ async function main() {
       current.volume = 0.10;
       document.querySelector(".range input").value = 10;
     }
-  });
+  });*/
 }
 
 // Call the main function to initialize the application
